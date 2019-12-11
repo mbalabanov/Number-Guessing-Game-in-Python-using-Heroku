@@ -1,0 +1,2 @@
+tinydb==3.12.2
+tinydb_serialization==1.0.4
