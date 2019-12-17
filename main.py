@@ -60,25 +60,75 @@ def logout():
         delcookie.delete_cookie('email')
         return delcookie
 
+@app.route("/profile")
+def show_profile():
+    session_token = request.cookies.get("session_token")
+
+    user = db.query(User).filter_by(session_token=session_token).first()
+
+    if user:
+        return render_template("profile.html", user=user)
+    else:
+        return redirect(url_for("index"))
+
+@app.route("/profile/edit", methods=["GET", "POST"])
+def edit_profile():
+    session_token = request.cookies.get("session_token")
+
+    user = db.query(User).filter_by(session_token=session_token).first()
+
+    if request.method == "GET":
+        if user:
+            return render_template("profile_edit.html", user=user)
+        else:
+            return redirect(url_for("index"))
+    elif request.method == "POST":
+        name = request.form.get("profile-name")
+        email = request.form.get("profile-email")
+
+        user.name = name
+        user.email = email
+
+        db.add(user)
+        db.commit()
+
+        return redirect(url_for("show_profile"))
+
+@app.route("/profile/delete", methods=["GET", "POST"])
+def profile_delete():
+    session_token = request.cookies.get("session_token")
+
+    user = db.query(User).filter_by(session_token=session_token).first()
+
+    if request.method == "GET":
+        if user:
+            return render_template("profile_delete.html", user=user)
+        else:
+            return redirect(url_for("index"))
+
+    elif request.method == "POST":
+        # delete the user in the database
+        db.delete(user)
+        db.commit()
+
+        return redirect(url_for("index"))
+
 @app.route("/result", methods=["POST"])
 def result():
     guess = int(request.form.get("guess"))
 
     session_token = request.cookies.get("session_token")
 
-    # get user from the database based on her/his email address
     user = db.query(User).filter_by(session_token=session_token).first()
 
     if guess == user.secret_number:
         message = "Correct! The secret number is {0}".format(str(guess))
 
-        # create a new random secret number
         new_secret = random.randint(1, 30)
 
         # update the user's secret number
         user.secret_number = new_secret
 
-        # update the user object in a database
         db.add(user)
         db.commit()
     elif guess > user.secret_number:
@@ -87,6 +137,19 @@ def result():
         message = "Your guess is not correct... try something bigger."
 
     return render_template("result.html", message=message)
+
+@app.route("/users")
+def all_users():
+    users = db.query(User).all()
+
+    return render_template("users.html", users=users)
+
+@app.route("/users/<int:user_id>")
+def user_details(user_id):
+    user = db.query(User).get(user_id)
+
+    return render_template("user_details.html", user=user)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

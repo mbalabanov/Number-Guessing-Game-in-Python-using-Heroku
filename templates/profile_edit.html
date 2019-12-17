@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Edit profile of {{user.email}}{% endblock title %}
+
+{% block content %}
+
+    <h2>Edit User</h2>
+
+    <form method="POST">
+        <div class="form-group">
+            <strong>Your name:</strong><br><input type="text" class="form-control" name="profile-name" placeholder="Enter your name" value="{{ user.name }}"><br>
+            <strong>Your email addresss:</strong><br><input type="email" class="form-control" name="profile-email" placeholder="Enter your email address" value="{{ user.email }}"><br>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+
+<p><a href="/profile/delete" class="btn btn-primary">Delete profile</a></p>
+
+{% endblock content %}

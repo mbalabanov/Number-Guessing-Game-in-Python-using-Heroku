@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Profile from {{user.email}}{% endblock title %}
+
+{% block content %}
+
+<h3>Profile from {{user.email}}</h3>
+
+<p><strong>Selected user's name: </strong>{{user.name}}</p>
+<p><strong>Selected user's email address: </strong>{{user.email}}</p>
+<p><strong>Selected user's secret number: </strong>{{user.secret_number}}</p>
+
+{% endblock content %}
