@@ -10,6 +10,9 @@
         <div class="form-group">
             <strong>Your name:</strong><br><input type="text" class="form-control" name="profile-name" placeholder="Enter your name" value="{{ user.name }}"><br>
             <strong>Your email addresss:</strong><br><input type="email" class="form-control" name="profile-email" placeholder="Enter your email address" value="{{ user.email }}"><br>
+            <p>Fill out to change your password:</p>
+            <strong>Previous password:</strong><br><input type="password" name="previous-password"  class="form-control" name="profile-previous-password" >
+            <strong>New password: </strong><br><input type="password" name="new-password" class="form-control" name="profile-new-password" ><br>
             <button class="btn btn-primary">Submit</button>
         </div>
     </form>

@@ -13,7 +13,7 @@ def index():
     session_token = request.cookies.get("session_token")
 
     if session_token:
-        user = db.query(User).filter_by(session_token=session_token).first()
+        user = db.query(User).filter_by(session_token=session_token, deleted=False).first()
     else:
         user = None
 
@@ -64,7 +64,7 @@ def logout():
 def show_profile():
     session_token = request.cookies.get("session_token")
 
-    user = db.query(User).filter_by(session_token=session_token).first()
+    user = db.query(User).filter_by(session_token=session_token, deleted=False).first()
 
     if user:
         return render_template("profile.html", user=user)
@@ -75,7 +75,7 @@ def show_profile():
 def edit_profile():
     session_token = request.cookies.get("session_token")
 
-    user = db.query(User).filter_by(session_token=session_token).first()
+    user = db.query(User).filter_by(session_token=session_token, deleted=False).first()
 
     if request.method == "GET":
         if user:
@@ -85,6 +85,14 @@ def edit_profile():
     elif request.method == "POST":
         name = request.form.get("profile-name")
         email = request.form.get("profile-email")
+        prev_password = request.form.get("previous-password")
+        new_password = request.form.get("new-password")
+
+        if check_password_hash(user.password, prev_password):
+            hashed_new_password = generate_password_hash(new_password)
+            user.password = hashed_new_password
+        else:
+            return "Wrong (old) password! Go back and try again."
 
         user.name = name
         user.email = email
@@ -98,7 +106,7 @@ def edit_profile():
 def profile_delete():
     session_token = request.cookies.get("session_token")
 
-    user = db.query(User).filter_by(session_token=session_token).first()
+    user = db.query(User).filter_by(session_token=session_token, deleted=False).first()
 
     if request.method == "GET":
         if user:
@@ -107,8 +115,8 @@ def profile_delete():
             return redirect(url_for("index"))
 
     elif request.method == "POST":
-        # delete the user in the database
-        db.delete(user)
+        user.deleted = True
+        db.add(user)
         db.commit()
 
         return redirect(url_for("index"))

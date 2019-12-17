@@ -11,4 +11,4 @@ class User(db.Model):
     password = db.Column(db.String)
     session_token = db.Column(db.String)
     secret_number = db.Column(db.Integer)
-
+    deleted = db.Column(db.Boolean, default=False)

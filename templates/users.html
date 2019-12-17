@@ -6,8 +6,9 @@
 <h3>All Users</h3>
 
 <table class="table">
+    <tr><th>User</th><th>Email Address</th><th>Deleted</th></tr>
 {% for user in users %}
-    <tr><td><a href="/users/{{user.id}}">{{ user.name }}</a></td><td>{{ user.email }}</td></tr>
+    <tr><td><a href="/users/{{user.id}}">{{ user.name }}</a></td><td>{{ user.email }}</td><td>{{ user.deleted }}</td></tr>
 {% endfor %}
 </table>
 
