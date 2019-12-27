@@ -12,12 +12,13 @@ db.create_all()  # create (new) tables in the database
 def index():
     session_token = request.cookies.get("session_token")
 
-    if session_token:
-        user = db.query(User).filter_by(session_token=session_token, deleted=False).first()
-    else:
-        user = None
+#    if session_token:
+#        user = db.query(User).filter_by(session_token=session_token, deleted=False).first()
+#    else:
+#        user = None
 
-    return render_template("index.html", user=user)
+#    return render_template("index.html", user=user)
+    return render_template("index.html")
 
 @app.route("/login", methods=["POST"])
 def login():
